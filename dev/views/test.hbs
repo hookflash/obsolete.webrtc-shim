@@ -1,0 +1,33 @@
+<div id="actions">
+	<ul>
+		<li><button class="link-rerun">Re-Run</button></li>
+	</ul>
+</div>
+<div id="docs">{{{docs}}}</div>
+
+<div id="mocha"></div>
+
+<script>
+
+window.__TestHarnessReady.then(function() {
+
+	mocha.setup('tdd');
+	window.expect = chai.expect;
+	window.assert = chai.assert;
+
+	mocha.setup({
+		ignoreLeaks: true
+	});
+
+	requirejs([
+		{{#each tests}}
+			"{{id}}"{{#if more}},{{/if}}
+		{{/each}}
+	], function() {
+
+		mocha.run();
+
+	});
+});
+
+</script>
