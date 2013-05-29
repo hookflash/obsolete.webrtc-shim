@@ -115,12 +115,13 @@
       };
 
       // Use this to format all outbound SDP Messages
-      // TODO: clean this
-      processSDPOut = function (sdp) {
+      processSDPOut = function (sdp, env) {
         var addCrypto, lines, line, out;
+        if (!env) env = browser; // for testing
+
         out = [];
         lines = sdp.split('\r\n');
-        if (browser === 'firefox') {
+        if (env === 'firefox') {
           // FF does not support crypto yet - chrome does not support unencrypted though.
           // If FF makes an offer to chrome you need to put a fake crypto key in or chrome will ignore it
           addCrypto = "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
@@ -131,16 +132,16 @@
             }
           });
         } else {
-          lines.forEach(function(line){
-            if (line.indexOf("a=ice-options:google-ice") !== -1) return;
-            out.push(line);
+          out = lines.filter(function(line){
+            return line.indexOf("a=ice-options:google-ice") !== -1;
           });
         }
         return useOPUS(out.join('\r\n'));
       };
 
       // Use this to format all inbound SDP messages - currently does nothing
-      processSDPIn = function (sdp) {
+      processSDPIn = function (sdp, env) {
+        if (!env) env = browser; // for testing
         return sdp;
       };
 

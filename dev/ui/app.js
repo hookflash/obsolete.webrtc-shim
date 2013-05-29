@@ -5,6 +5,7 @@
 		paths: {
 			q: "/lib/q",
 			tests: "/tests",
+      fixtures: "/fixtures",
 			"webrtc-shim": "/lib/webrtc-shim"
 		}
 	});
