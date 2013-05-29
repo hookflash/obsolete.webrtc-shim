@@ -92,29 +92,21 @@
 
       // Replace audio codecs in SDP with OPUS
       useOPUS = function (sdp) {
-        var idx, line, lines, mLineIdx, payload, _i, _len;
+        var line, lines, mLine, mLineIdx, payload, i, len;
         lines = sdp.split('\r\n');
-        mLineIdx = ((function () {
-              var _i, _len, _results;
-              _results = [];
-              for (idx = _i = 0, _len = lines.length; _i < _len; idx = ++_i) {
-                line = lines[idx];
-                if (line.indexOf('m=audio') !== -1) {
-                  _results.push(idx);
-                }
-              }
-              return _results;
-            })())[0];
-        if (mLineIdx == null) {
-          return sdp;
-        }
-        for (idx = _i = 0, _len = lines.length; _i < _len; idx = ++_i) {
-          line = lines[idx];
-          if (!(line.indexOf('opus/48000') !== -1)) {
-            continue;
-          }
+
+        mLine = lines.filter(function(el){
+          return line.indexOf('m=audio') !== -1;
+        })[0];
+        mLineIdx = lines.indexOf(mLine);
+
+        if (!mLineIdx) return sdp;
+
+        for (i = 0, len = lines.length; i < len; ++i) {
+          line = lines[i];
+          if (line.indexOf('opus/48000') === -1) continue;
           payload = extract(line, /:(\d+) opus\/48000/i);
-          if (payload != null) {
+          if (payload) {
             lines[mLineIdx] = replaceCodec(lines[mLineIdx], payload);
           }
           break;
@@ -124,14 +116,14 @@
       };
 
       // Use this to format all outbound SDP Messages
+      // TODO: clean this
       processSDPOut = function (sdp) {
         var addCrypto, line, out, _i, _j, _len, _len1, _ref, _ref1;
         out = [];
         if (browser === 'firefox') {
           // FF does not support crypto yet - chrome does not support unencrypted though.
           // If FF makes an offer to chrome you need to put a fake crypto key in or chrome will ignore it
-          addCrypto =
-            "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
+          addCrypto = "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
           _ref = sdp.split('\r\n');
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             line = _ref[_i];
@@ -159,14 +151,13 @@
 
       // Util for attaching a video stream to a DOM element
       attachStream = function (uri, el) {
-        var e, _i, _len;
+        var i, len;
         if (typeof el === "string") {
           return attachStream(uri, document.getElementById(el));
         } else if (el.jquery) {
           el.attr('src', uri);
-          for (_i = 0, _len = el.length; _i < _len; _i++) {
-            e = el[_i];
-            e.play();
+          for (i = 0, len = el.length; i < len; i++) {
+            el[i].play();
           }
         } else {
           el.src = uri;
@@ -260,7 +251,12 @@
           PeerConnConfig: PeerConnConfig,
           browser: browser,
           supported: supported,
-          constraints: mediaConstraints
+          constraints: mediaConstraints,
+          // This stuff is exposed for testing
+
+          useOPUS: useOPUS,
+          removeCN: removeCN,
+          replaceCodec: replaceCodec
         };
         return out;
       };
