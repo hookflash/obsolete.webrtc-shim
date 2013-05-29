@@ -46,8 +46,7 @@
 
       // Simple util for dealing with regex matches
       extract = function (str, reg) {
-        var match;
-        match = str.match(reg);
+        var match = str.match(reg);
         return (match ? match[1] : null);
       };
 
@@ -118,28 +117,24 @@
       // Use this to format all outbound SDP Messages
       // TODO: clean this
       processSDPOut = function (sdp) {
-        var addCrypto, line, out, _i, _j, _len, _len1, _ref, _ref1;
+        var addCrypto, lines, line, out;
         out = [];
+        lines = sdp.split('\r\n');
         if (browser === 'firefox') {
           // FF does not support crypto yet - chrome does not support unencrypted though.
           // If FF makes an offer to chrome you need to put a fake crypto key in or chrome will ignore it
           addCrypto = "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
-          _ref = sdp.split('\r\n');
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            line = _ref[_i];
+          lines.forEach(function(line){
             out.push(line);
             if (line.indexOf('m=') === 0) {
               out.push(addCrypto);
             }
-          }
+          });
         } else {
-          _ref1 = sdp.split('\r\n');
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            line = _ref1[_j];
-            if (line.indexOf("a=ice-options:google-ice") === -1) {
-              out.push(line);
-            }
-          }
+          lines.forEach(function(line){
+            if (line.indexOf("a=ice-options:google-ice") !== -1) return;
+            out.push(line);
+          });
         }
         return useOPUS(out.join('\r\n'));
       };
