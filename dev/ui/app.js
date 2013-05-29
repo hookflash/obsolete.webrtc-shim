@@ -19,7 +19,7 @@
 	], function(Q, WebRTCshim) {
 
 		window.HELPERS = {
-		}
+		};
 
 		// Wait for DOM to be ready.
 		$(document).ready(function() {

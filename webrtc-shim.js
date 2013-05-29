@@ -34,21 +34,21 @@
 
       // getUserMedia errors unless it is bound to the scope of navigator
 
-      if (getUserMedia != null) {
+      if (getUserMedia) {
         getUserMedia = getUserMedia.bind(navigator);
       }
 
       // Very simple browser detection for chrome and FF
 
       browser = (navigator.mozGetUserMedia ? 'firefox' : 'chrome');
-      supported = (PeerConnection != null) && (getUserMedia != null);
+      supported = (PeerConnection && getUserMedia);
 
 
       // Simple util for dealing with regex matches
       extract = function (str, reg) {
         var match;
         match = str.match(reg);
-        return (match != null ? match[1] : null);
+        return (match ? match[1] : null);
       };
 
       // replaceCodec takes an SDP line with a codec in it and replaces it with a new codec
