@@ -1,4 +1,3 @@
-
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -50,16 +49,16 @@
 
   // replaceCodec takes an SDP line with a codec in it and replaces it with a new codec
   replaceCodec = function(line, codec) {
-    var el, els, idx, out, _i, _len;
+    var el, els, out, i, len;
     els = line.split(' ');
     out = [];
-    for (idx = _i = 0, _len = els.length; _i < _len; idx = ++_i) {
-      el = els[idx];
-      if (idx === 3) {
-        out[idx++] = codec;
+    for (i = 0, len = els.length; i < len; ++i) {
+      el = els[i];
+      if (i === 3) {
+        out[i++] = codec;
       }
       if (el !== codec) {
-        out[idx++] = el;
+        out[i++] = el;
       }
     }
     return out.join(' ');
