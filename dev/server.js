@@ -6,6 +6,7 @@ const GLOB = require("glob");
 const FS = require("fs-extra");
 const MARKED = require("marked");
 const WS = require("ws");
+const SIGNAL = require("./signaling");
 
 const PORT = 8081;
 
@@ -41,7 +42,7 @@ exports.main = function(callback) {
         var server = app.listen(PORT);
 
         var socketServer = new WS.Server({server: server});
-        socketServer.on('connection', handleSocket);
+        socketServer.on('connection', signaling.handleSocket);
 
         console.log("open http://localhost:" + PORT + "/");
 
@@ -125,15 +126,6 @@ function getTests(callback) {
         if (!files || files.length === 0) return callback(new Error("No tests found! This should not happen."));
         return callback(null, files);
     });
-}
-
-function handleSocket(socket) {
-  socket.on('message', function(msg){
-
-  });
-  socket.on('close', function(msg){
-
-  });
 }
 
 if (require.main === module) {

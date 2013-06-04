@@ -249,7 +249,6 @@
           supported: supported,
           constraints: mediaConstraints,
           // This stuff is exposed for testing
-
           useOPUS: useOPUS,
           removeCN: removeCN,
           replaceCodec: replaceCodec
