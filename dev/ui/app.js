@@ -20,12 +20,12 @@
 	], function(Q, WebRTCshim) {
 
 		window.HELPERS = {
+      getWSConnection: function(){
+        var wsHost = "ws://"+window.location.host.replace(/:.*/, '');
+        if (window.location.port.length > 0) wsHost += ":"+window.location.port;
+        return new WebSocket(wsHost);
+      }
 		};
-
-    // Figure out WebSocket URL
-    var wsHost = "ws://"+window.location.host.replace(/:.*/, '');
-    if (window.location.port.length > 0) wsHost += ":"+window.location.port;
-    window.WSHOST = wsHost;
 
 		// Wait for DOM to be ready.
 		$(document).ready(function() {

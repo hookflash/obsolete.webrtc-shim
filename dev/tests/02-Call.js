@@ -7,7 +7,7 @@ define(["webrtc-shim"], function (shim) {
   var ws = null;
 
   test('WebSocket should be created', function () {
-    ws = new WebSocket(window.WSHOST);
+    ws = HELPERS.getWSConnection();
     expect(ws).to.exist;
   });
 
