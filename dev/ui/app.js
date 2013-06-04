@@ -22,6 +22,11 @@
 		window.HELPERS = {
 		};
 
+    // Figure out WebSocket URL
+    var wsHost = "ws://"+window.location.host.replace(/:.*/, '');
+    if (window.location.port.length > 0) wsHost += ":"+window.location.port;
+    window.WSHOST = wsHost;
+
 		// Wait for DOM to be ready.
 		$(document).ready(function() {
 

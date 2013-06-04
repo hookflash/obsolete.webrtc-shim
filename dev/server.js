@@ -5,9 +5,9 @@ const HBS = require("hbs");
 const GLOB = require("glob");
 const FS = require("fs-extra");
 const MARKED = require("marked");
+const WS = require("ws");
 
 const PORT = 8081;
-
 
 exports.main = function(callback) {
     try {
@@ -16,7 +16,7 @@ exports.main = function(callback) {
         app.use(EXPRESS.bodyParser());
 
         var hbs = HBS.create();
-        
+
         app.set("view engine", "hbs");
 
         app.engine("hbs", hbs.__express);
@@ -40,6 +40,9 @@ exports.main = function(callback) {
 
         var server = app.listen(PORT);
 
+        var socketServer = new WS.Server({server: server});
+        socketServer.on('connection', handleSocket);
+
         console.log("open http://localhost:" + PORT + "/");
 
         return callback(null, {
@@ -50,7 +53,7 @@ exports.main = function(callback) {
     } catch(err) {
         return callback(err);
     }
-}
+};
 
 
 function mountStaticDir(app, route, path) {
@@ -62,13 +65,13 @@ function mountStaticDir(app, route, path) {
             return next.apply(null, arguments);
         });
     });
-};
+}
 
 
 var tests = null;
 function getTemplateData(page, callback) {
     if (page === "index") {
-        if (tests) return callback(null, tests);        
+        if (tests) return callback(null, tests);
         return getTests(function(err, files) {
             if (err) return callback(err);
             tests = {
@@ -99,7 +102,7 @@ function getTemplateData(page, callback) {
             });
         });
     } else {
-        var m = page.match(/^test\/(.*)$/)
+        var m = page.match(/^test\/(.*)$/);
         if (!m) return callback(null, {});
         var m2 = FS.readFileSync(PATH.join(__dirname, "tests", m[1] + ".js")).toString().match(/\/\*!markdown\s*\n([\s\S]*?)\n\*\//);
         return callback(null, {
@@ -124,6 +127,14 @@ function getTests(callback) {
     });
 }
 
+function handleSocket(socket) {
+  socket.on('message', function(msg){
+
+  });
+  socket.on('close', function(msg){
+
+  });
+}
 
 if (require.main === module) {
     exports.main(function(err) {
