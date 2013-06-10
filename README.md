@@ -4,11 +4,14 @@ Cross-browser WebRTC API
 ========================
 
 A shim around the [WebRTC 1.0: Real-time Communication Between Browsers](http://dev.w3.org/2011/webrtc/editor/webrtc.html) specification
-to make a consistent API available for the following browsers:
+to make a consistent & compatible API available for the following browsers:
 
-  * [Firefox](http://nightly.mozilla.org/) `>= 21`
-  * [Google Chrome](https://www.google.com/intl/en/chrome/browser/canary.html) `>= 25`
+  * [Google Chrome](https://www.google.com/chrome/)
+  * [Firefox](http://www.mozilla.org/firefox/)
 
+See it in action:
+
+  * Minimal WebRTC Demo - https://github.com/openpeer/webrtc-demo
 
 Usage
 -----
